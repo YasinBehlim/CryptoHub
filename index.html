@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Crypto Hub - Live Prices & Top Coins</title>
-<meta name="description" content="Live cryptocurrency prices and top 5 coins to watch.">
+<title>Crypto Hub - Home</title>
+<meta name="description" content="Home page of Crypto Hub with live coin prices, top 5 coins, and upcoming crypto events.">
 <link rel="stylesheet" href="style.css">
 
 <!-- Adsense + Analytics -->
@@ -17,45 +17,11 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config','G-KP903HTNPT',{anonymize_ip:true});
 </script>
-
 <script src="script.js"></script>
-<style>
-:root {
-  --bg: #0f111a; --panel: #1c1f2a; --text: #f5f5f5; --accent: #4ade80; --negative: #f87171; --muted: #a1a1aa;
-  --card-bg: #1f2233;
-}
-body { margin:0; font-family:'Segoe UI', sans-serif; background:var(--bg); color:var(--text); }
-.container { max-width:1000px; margin:auto; padding:20px; }
-h1 { text-align:center; margin-bottom:30px; }
-nav { text-align:center; margin-bottom:40px; }
-nav a { color:var(--accent); margin:0 12px; text-decoration:none; font-weight:600; }
-nav a:hover { text-decoration:underline; }
-
-/* Live price section */
-.live-search { display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-bottom:50px; }
-.live-search input { padding:12px 18px; border-radius:8px; border:none; width:250px; font-size:1rem; background:var(--panel); color:var(--text); }
-.live-search button { padding:12px 20px; border:none; border-radius:8px; background:var(--accent); color:#000; font-weight:600; cursor:pointer; transition:0.2s; }
-.live-search button:hover { background:#22c55e; }
-
-#coinPriceHome { text-align:center; font-size:1.2rem; margin-top:12px; }
-
-/* Top 5 Coins */
-.top-coins { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:20px; }
-.coin-card { background:var(--card-bg); border-radius:12px; padding:20px; text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.3); transition:0.2s; }
-.coin-card:hover { transform:translateY(-5px); box-shadow:0 8px 20px rgba(0,0,0,0.5); }
-.coin-card h3 { margin:10px 0 5px; font-size:1.1rem; }
-.coin-card p { margin:5px 0; font-size:1rem; }
-.positive { color:var(--accent); font-weight:600; }
-.negative { color:var(--negative); font-weight:600; }
-
-/* Responsive */
-@media(max-width:600px){ .live-search { flex-direction:column; align-items:center; } }
-</style>
 </head>
 <body>
 <div class="container">
-<h1>Crypto Hub</h1>
-
+<h1>Welcome to Crypto Hub</h1>
 <nav>
 <a href="index.html">Home</a>
 <a href="live.html">Live Tracker</a>
@@ -64,60 +30,77 @@ nav a:hover { text-decoration:underline; }
 <a href="guides.html">Guide</a>
 </nav>
 
-<!-- Live Coin Price -->
-<div class="live-search">
-<input type="text" id="searchCoinHome" placeholder="Enter coin symbol (BTC, ETH...)">
-<button onclick="checkPrice('searchCoinHome','coinPriceHome')">Check Price</button>
+<!-- Coin Price Search -->
+<div class="box row">
+<input type="text" id="searchCoinHome" placeholder="Search coin (BTC, ETH...)" data-live-input data-output="coinPriceHome">
+<button onclick="checkPrice('searchCoinHome','coinPriceHome')" data-coin-btn disabled>Check Price</button>
 </div>
-<p id="coinPriceHome"></p>
+<p id="coinPriceHome" style="font-size:1.2rem;margin-top:10px;"></p>
 
 <!-- Top 5 Coins -->
-<h2 style="text-align:center; margin-bottom:25px;">Top 5 Coins to Watch</h2>
-<div class="top-coins" id="top5Coins">
-<!-- Cards will be injected here by JS -->
-</div>
+<h2>Top 5 Coins to Watch</h2>
+<table id="top5Coins">
+<tr><td colspan="4">Loading...</td></tr>
+</table>
+
+<!-- Crypto Events -->
+<h2>Upcoming Crypto Events</h2>
+<table id="cryptoEvents">
+<tr><td colspan="4">Loading...</td></tr>
+</table>
 
 <!-- Adsense -->
-<div class="ads-block" style="margin:40px 0; text-align:center;">
+<div class="ads-block">
 <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3051797649580954" data-ad-slot="872965908" data-ad-format="auto" data-full-width-responsive="true"></ins>
 <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
 </div>
 </div>
 
 <script>
-// Fetch coins for search and top 5
-let allCoinsHome = [];
-fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&per_page=100')
-.then(res => res.json())
-.then(data => {
-    allCoinsHome = data;
-    renderTop5();
-});
-
-// Check price function
-function checkPrice(inputId, outputId){
-    const q = document.getElementById(inputId).value.toLowerCase();
-    const coin = allCoinsHome.find(c => c.id.toLowerCase()===q || c.symbol.toLowerCase()===q);
-    document.getElementById(outputId).innerHTML = coin ? 
-        `${coin.name}: $${coin.current_price.toLocaleString()}` : 'Coin not found';
-}
-
-// Render Top 5 coins cards
-function renderTop5(){
-    const top5 = allCoinsHome.slice(0,5);
-    const container = document.getElementById('top5Coins');
-    container.innerHTML = '';
-    top5.forEach(c => {
-        const card = document.createElement('div');
-        card.className = 'coin-card';
-        card.innerHTML = `
-        <h3>${c.name} (${c.symbol.toUpperCase()})</h3>
-        <p>Price: $${c.current_price.toLocaleString()}</p>
-        <p class="${c.price_change_percentage_24h>=0?'positive':'negative'}">
-        24h: ${c.price_change_percentage_24h.toFixed(2)}%</p>`;
-        container.appendChild(card);
+// Render Top 5 coins dynamically
+function renderTop5Coins(){
+    if(!allCoins.length) return;
+    const table = document.getElementById('top5Coins');
+    table.innerHTML = `
+        <tr>
+            <th>Rank</th><th>Coin</th><th>Price (USD)</th><th>24H Change</th>
+        </tr>
+    `;
+    allCoins.slice(0,5).forEach((c,i)=>{
+        table.innerHTML += `<tr>
+            <td>${i+1}</td>
+            <td>${c.name} (${c.symbol.toUpperCase()})</td>
+            <td>$${c.current_price.toLocaleString()}</td>
+            <td>${colorText(c.price_change_percentage_24h)}</td>
+        </tr>`;
     });
 }
+
+// Sample dynamic crypto events
+function renderCryptoEvents(){
+    const events = [
+        {name:"Bitcoin Halving", date:"2025-04-15", type:"Protocol", reward:"N/A"},
+        {name:"Ethereum Upgrade", date:"2025-06-01", type:"Network", reward:"N/A"},
+        {name:"New Token Launch", date:"2025-11-25", type:"Launch", reward:"Airdrop"}
+    ];
+    const table = document.getElementById('cryptoEvents');
+    table.innerHTML = `<tr><th>Event</th><th>Date</th><th>Type</th><th>Reward</th></tr>`;
+    events.forEach(e=>{
+        table.innerHTML += `<tr>
+            <td>${e.name}</td><td>${e.date}</td><td>${e.type}</td><td>${e.reward}</td>
+        </tr>`;
+    });
+}
+
+// Wait until coins loaded
+let waitLoaded=setInterval(()=>{
+    if(allCoins.length){
+        renderTop5Coins();
+        renderCryptoEvents();
+        clearInterval(waitLoaded);
+    }
+},200);
 </script>
+
 </body>
 </html>
