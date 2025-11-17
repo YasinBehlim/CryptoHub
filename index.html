@@ -12,7 +12,7 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3051797649580954" crossorigin="anonymous"></script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-KP903HTNPT"></script>
 <script>
-window.dataLayer = window.dataLayer || [];
+window.dataLayer=window.dataLayer||[];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config','G-KP903HTNPT',{anonymize_ip:true});
@@ -22,30 +22,26 @@ gtag('config','G-KP903HTNPT',{anonymize_ip:true});
 <body>
 <div class="container">
 <h1>Crypto News & Live Price</h1>
-
-<nav class="top-nav">
-<a href="index.html" class="active">Home</a>
+<nav class="nav-bar">
+<a href="index.html">Home</a>
 <a href="live.html">Live Tracker</a>
 <a href="gainers.html">Top Gainers</a>
 <a href="staking.html">Staking / ROI</a>
 <a href="guides.html">Guide</a>
 </nav>
 
-<section class="live-price-section">
-<h2>Check Live Coin Price</h2>
+<!-- Live Coin Price -->
 <div class="row">
 <input type="text" id="searchCoinHome" placeholder="Search coin (BTC, ETH...)" data-live-input data-output="coinPriceHome">
 <button data-coin-btn onclick="checkPrice('searchCoinHome','coinPriceHome')">Check Price</button>
 </div>
-<p id="coinPriceHome" class="price-output"></p>
-</section>
+<p id="coinPriceHome" style="font-size:1.2rem;margin-top:10px;"></p>
 
-<section class="news-section">
+<!-- Daily Crypto News -->
 <h2>Latest Crypto News</h2>
-<div id="newsFeed" class="news-feed">
+<div id="newsFeed">
 <p>Loading news...</p>
 </div>
-</section>
 
 <!-- Adsense -->
 <div class="ads-block">
@@ -55,21 +51,18 @@ gtag('config','G-KP903HTNPT',{anonymize_ip:true});
 </div>
 
 <script>
-// Fetch latest news from CoinGecko
+// News feed example via CoinGecko status_updates
 fetch('https://api.coingecko.com/api/v3/status_updates')
-.then(res => res.json())
-.then(data => {
-  const feed = document.getElementById('newsFeed');
-  feed.innerHTML = '';
-  data.status_updates.slice(0,5).forEach(n => {
-    const div = document.createElement('div');
-    div.className = 'news-item';
-    div.innerHTML = `<a href="${n.project_url}" target="_blank">${n.description}</a> 
-    <small>${new Date(n.created_at).toLocaleString()}</small>`;
+.then(r=>r.json())
+.then(data=>{
+  const feed=document.getElementById('newsFeed');
+  feed.innerHTML='';
+  data.status_updates.slice(0,5).forEach(n=>{
+    const div=document.createElement('div');
+    div.innerHTML=`<a href="${n.project_url}" target="_blank">${n.description}</a> <small>${new Date(n.created_at).toLocaleString()}</small>`;
     feed.appendChild(div);
   });
 });
 </script>
-
 </body>
 </html>
