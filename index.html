@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Crypto Hub - Live Prices & Events</title>
-<meta name="description" content="Live crypto prices and upcoming crypto events.">
+<title>Crypto Events</title>
+<meta name="description" content="Upcoming crypto events, launches, and airdrops.">
 <link rel="stylesheet" href="style.css">
 
 <!-- Adsense + Analytics -->
@@ -21,73 +21,75 @@ gtag('config','G-KP903HTNPT',{anonymize_ip:true});
 </head>
 <body>
 <div class="container">
-<h1>Crypto Hub</h1>
-
-<!-- Navigation -->
+<h1>Upcoming Crypto Events</h1>
 <nav>
 <a href="index.html">Home</a> | 
 <a href="live.html">Live Tracker</a> | 
 <a href="gainers.html">Top Gainers</a> | 
 <a href="staking.html">Staking / ROI</a> | 
-<a href="guides.html">Guide</a>
+<a href="guides.html">Guide</a> | 
+<a href="events.html">Events</a>
 </nav>
 
-<!-- Live Coin Price -->
-<div class="row">
-<input type="text" id="searchCoinHome" placeholder="Search coin (BTC, ETH...)">
-<button onclick="checkPrice('searchCoinHome','coinPriceHome')">Check Price</button>
-</div>
-<p id="coinPriceHome" style="font-size:1.2rem;margin-top:10px;"></p>
-
-<!-- Upcoming Crypto Events -->
-<h2>Upcoming Crypto Events</h2>
-<div id="eventsFeed">
-<p>Loading events...</p>
-</div>
+<!-- Events Table -->
+<h2>Latest Crypto Events</h2>
+<table id="cryptoEventsTable">
+<thead>
+<tr>
+<th>Coin</th>
+<th>Event</th>
+<th>Date</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr><td colspan="4">Loading events...</td></tr>
+</tbody>
+</table>
 
 <!-- Adsense -->
 <div class="ads-block">
 <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3051797649580954" data-ad-slot="872965908" data-ad-format="auto" data-full-width-responsive="true"></ins>
 <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
 </div>
+
 </div>
 
 <script>
-// Fetch top 5 crypto events from CoinGecko
-fetch('https://api.coingecko.com/api/v3/events')
-.then(r => r.json())
-.then(data => {
-    const feed = document.getElementById('eventsFeed');
-    feed.innerHTML = '';
-    const events = data.data ? data.data.slice(0,5) : [];
-    if(!events.length){
-        feed.innerHTML = '<p>No upcoming events.</p>';
-        return;
-    }
-    const table = document.createElement('table');
-    table.innerHTML = `
-    <tr>
-        <th>Date</th>
-        <th>Event</th>
-        <th>Coin</th>
-        <th>Link</th>
-    </tr>`;
-    events.forEach(e => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-        <td>${new Date(e.start_date).toLocaleDateString()}</td>
-        <td>${e.title}</td>
-        <td>${e.coins ? e.coins.join(', ') : '-'}</td>
-        <td>${e.website_url ? `<a href="${e.website_url}" target="_blank">Link</a>` : '-'}</td>`;
-        table.appendChild(tr);
-    });
-    feed.appendChild(table);
-})
-.catch(err => {
-    document.getElementById('eventsFeed').innerHTML = '<p>Failed to load events.</p>';
-    console.error(err);
-});
-</script>
+// Example API for crypto events (CoinGecko events API)
+async function loadCryptoEvents() {
+    const table = document.getElementById('cryptoEventsTable').querySelector('tbody');
+    table.innerHTML = '<tr><td colspan="4">Loading events...</td></tr>';
 
+    try {
+        const res = await fetch('https://api.coingecko.com/api/v3/events');
+        const data = await res.json();
+
+        const events = data.data.slice(0, 10); // show top 10 events
+        if(events.length === 0){
+            table.innerHTML = '<tr><td colspan="4">No upcoming crypto events</td></tr>';
+            return;
+        }
+
+        table.innerHTML = '';
+        events.forEach(ev => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+            <td>${ev.coins.map(c=>c.name).join(', ')}</td>
+            <td>${ev.title}</td>
+            <td>${new Date(ev.start_date).toLocaleDateString()}</td>
+            <td><a href="${ev.website}" target="_blank">Details</a></td>
+            `;
+            table.appendChild(tr);
+        });
+    } catch(err){
+        table.innerHTML = '<tr><td colspan="4">Failed to load events</td></tr>';
+        console.error(err);
+    }
+}
+
+// Wait for JS to load
+document.addEventListener('DOMContentLoaded', loadCryptoEvents);
+</script>
 </body>
 </html>
