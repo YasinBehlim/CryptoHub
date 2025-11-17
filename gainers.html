@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Top Gainers / Losers & Airdrops</title>
+<meta name="description" content="Track top gaining and losing cryptocurrencies plus latest airdrops.">
+<link rel="stylesheet" href="style.css">
+
+<!-- Adsense + Analytics -->
+<meta name="google-adsense-account" content="ca-pub-3051797649580954">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3051797649580954" crossorigin="anonymous"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KP903HTNPT"></script>
+<script>
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config','G-KP903HTNPT',{anonymize_ip:true});
+</script>
+<script src="script.js"></script>
+</head>
+<body>
+<div class="container">
+<h1>Top Gainers / Losers & Airdrops</h1>
+<nav>
+<a href="index.html">Home</a> | 
+<a href="live.html">Live Tracker</a> | 
+<a href="gainers.html">Top Gainers</a> | 
+<a href="staking.html">Staking / ROI</a> | 
+<a href="guides.html">Guide</a>
+</nav>
+
+<!-- Top Gainers -->
+<h2>Top 10 Gainers (24H)</h2>
+<table id="topGainers">
+<thead>
+<tr><th>Coin</th><th>Price (USD)</th><th>24H Change</th></tr>
+</thead>
+<tbody><tr><td colspan="3">Loading...</td></tr></tbody>
+</table>
+
+<!-- Top Losers -->
+<h2>Top 10 Losers (24H)</h2>
+<table id="topLosers">
+<thead>
+<tr><th>Coin</th><th>Price (USD)</th><th>24H Change</th></tr>
+</thead>
+<tbody><tr><td colspan="3">Loading...</td></tr></tbody>
+</table>
+
+<!-- Example Airdrops -->
+<h2>Latest Airdrops</h2>
+<table>
+<thead>
+<tr><th>Coin</th><th>Task</th><th>Reward</th><th>End Date</th></tr>
+</thead>
+<tbody>
+<tr><td>ExampleCoin</td><td>Follow & Retweet</td><td>50 EXC</td><td>2025-12-31</td></tr>
+<tr><td>SampleToken</td><td>Sign up</td><td>100 STK</td><td>2025-11-30</td></tr>
+</tbody>
+</table>
+
+<!-- Adsense -->
+<div class="ads-block">
+<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3051797649580954" data-ad-slot="872965908" data-ad-format="auto" data-full-width-responsive="true"></ins>
+<script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+</div>
+
+</div>
+
+<script>
+// Render Gainers / Losers
+function renderGainersLosers(){
+  if(!allCoins.length) return;
+  const gainers=sortCoins(true).slice(0,10);
+  const losers=sortCoins(false).slice(0,10);
+  
+  const gTable=document.getElementById('topGainers').querySelector('tbody');
+  gTable.innerHTML='';
+  gainers.forEach(c=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${c.name} (${c.symbol.toUpperCase()})</td>
+    <td>$${c.current_price.toLocaleString()}</td>
+    <td>${colorText(c.price_change_percentage_24h)}</td>`;
+    gTable.appendChild(tr);
+  });
+
+  const lTable=document.getElementById('topLosers').querySelector('tbody');
+  lTable.innerHTML='';
+  losers.forEach(c=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${c.name} (${c.symbol.toUpperCase()})</td>
+    <td>$${c.current_price.toLocaleString()}</td>
+    <td>${colorText(c.price_change_percentage_24h)}</td>`;
+    lTable.appendChild(tr);
+  });
+}
+
+// Wait until allCoins loaded
+let checkLoaded2=setInterval(()=>{
+  if(allCoins.length){ renderGainersLosers(); clearInterval(checkLoaded2);}
+},200);
+</script>
+</body>
+</html>
