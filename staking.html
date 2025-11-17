@@ -6,27 +6,16 @@
 <title>Staking / Mining ROI Calculator</title>
 <meta name="description" content="Calculate staking, mining and ROI for cryptocurrencies.">
 <link rel="stylesheet" href="style.css">
-
-<!-- Adsense + Analytics -->
-<meta name="google-adsense-account" content="ca-pub-3051797649580954">
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3051797649580954" crossorigin="anonymous"></script>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-KP903HTNPT"></script>
-<script>
-window.dataLayer=window.dataLayer||[];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config','G-KP903HTNPT',{anonymize_ip:true});
-</script>
 <script src="script.js"></script>
 </head>
 <body>
 <div class="container">
 <h1>Staking / Mining / ROI Calculator</h1>
-<nav>
-<a href="index.html">Home</a> | 
-<a href="live.html">Live Tracker</a> | 
-<a href="gainers.html">Top Gainers</a> | 
-<a href="staking.html">Staking / ROI</a> | 
+<nav class="nav-bar">
+<a href="index.html">Home</a>
+<a href="live.html">Live Tracker</a>
+<a href="gainers.html">Top Gainers</a>
+<a href="staking.html">Staking / ROI</a>
 <a href="guides.html">Guide</a>
 </nav>
 
@@ -43,19 +32,6 @@ gtag('config','G-KP903HTNPT',{anonymize_ip:true});
 <button onclick="calculateROI()">Calculate ROI</button>
 <p id="roiResult" style="margin-top:10px;font-size:1.2rem;"></p>
 </div>
-
-<script>
-function calculateROI(){
-  const p=+document.getElementById('coinPrice').value;
-  const amt=+document.getElementById('amount').value;
-  const r=+document.getElementById('stakingReward').value;
-  const t=+document.getElementById('period').value;
-
-  if(!p||!amt||!r||!t){document.getElementById('roiResult').innerText='Please fill all fields'; return;}
-  const roi=amt*p*((r/100)*t);
-  document.getElementById('roiResult').innerHTML=`Estimated ROI: <strong style="color:#238636">$${roi.toFixed(2)}</strong>`;
-}
-</script>
-
+</div>
 </body>
 </html>
