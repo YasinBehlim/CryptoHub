@@ -5,7 +5,7 @@ fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&per_page=1
 .then(r => r.json())
 .then(data => {
     allCoins = data;
-    // Enable search buttons after coins load
+    // Enable all search buttons
     document.querySelectorAll('button[data-coin-btn]').forEach(btn => btn.disabled = false);
 });
 
@@ -14,7 +14,7 @@ fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&per_page=1
 // -------------------
 function checkPrice(inputId, outputId){
     if(!allCoins.length){
-        alert("Coins still loading, please wait a moment.");
+        alert("Coins still loading, please wait...");
         return;
     }
     const q = document.getElementById(inputId).value.toLowerCase();
@@ -25,16 +25,21 @@ function checkPrice(inputId, outputId){
 }
 
 // -------------------
-// Top Gainers / Losers Table
+// Top Gainers / Losers
+// -------------------
+function sortCoins(desc=true){
+    if(!allCoins.length) return [];
+    return allCoins.slice().sort((a,b)=> desc 
+        ? (b.price_change_percentage_24h || 0) - (a.price_change_percentage_24h || 0)
+        : (a.price_change_percentage_24h || 0) - (b.price_change_percentage_24h || 0));
+}
+
+// -------------------
+// Render Top Coins Table
 // -------------------
 function renderTopCoins(tableId, desc=true, limit=10){
     if(!allCoins.length) return;
-
-    const sorted = allCoins.slice().sort((a,b)=> desc 
-        ? b.price_change_percentage_24h - a.price_change_percentage_24h
-        : a.price_change_percentage_24h - b.price_change_percentage_24h
-    );
-
+    const sorted = sortCoins(desc).slice(0, limit);
     const table = document.getElementById(tableId);
     if(!table) return;
 
@@ -47,7 +52,7 @@ function renderTopCoins(tableId, desc=true, limit=10){
         </tr>
     `;
 
-    sorted.slice(0, limit).forEach((coin, i) => {
+    sorted.forEach((coin, i)=>{
         table.innerHTML += `
         <tr>
             <td>${i+1}</td>
@@ -59,23 +64,27 @@ function renderTopCoins(tableId, desc=true, limit=10){
 }
 
 // -------------------
-// Helper: Color text for positive/negative
+// Color Helper
 // -------------------
 function colorText(value){
     return value >= 0 
-        ? `<span style="color:#238636">${value.toFixed(2)}%</span>` 
-        : `<span style="color:#e5534b">${value.toFixed(2)}%</span>`;
+        ? `<span style="color:#16a34a">${value.toFixed(2)}%</span>` 
+        : `<span style="color:#dc2626">${value.toFixed(2)}%</span>`;
 }
 
 // -------------------
-// Optional: Auto refresh prices every 60 seconds
+// Auto-refresh prices every 60s
 // -------------------
 setInterval(()=>{
     if(allCoins.length){
+        // Update search outputs
         document.querySelectorAll('input[data-live-input]').forEach(input => {
-            const outputId = input.dataset-output;
+            const outputId = input.dataset.output;
             checkPrice(input.id, outputId);
         });
-        // Optionally refresh Top Gainers / Losers table here
+        // Optionally refresh top gainers / losers
+        ['topGainers','topLosers','coinsTable'].forEach(id=>{
+            if(document.getElementById(id)) renderTopCoins(id, id!=='topLosers', 10);
+        });
     }
 }, 60000);
