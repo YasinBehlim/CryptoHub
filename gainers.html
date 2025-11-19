@@ -5,12 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Top Gainers</title>
 <link rel="stylesheet" href="style.css">
-<script src="script.js"></script>
 </head>
 <body>
 <div class="container">
 
-<!-- Navigation -->
 <nav class="main-nav">
   <a href="index.html">Home</a>
   <a href="live.html">Live Tracker</a>
@@ -29,5 +27,16 @@
 </table>
 
 </div>
+
+<script src="script.js"></script>
+<script>
+const wait = setInterval(() => {
+    if (allCoins.length) {
+        renderTopCoins("topGainers", true, 20);
+        clearInterval(wait);
+    }
+}, 300);
+</script>
+
 </body>
 </html>
