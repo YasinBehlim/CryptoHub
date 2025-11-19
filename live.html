@@ -9,6 +9,7 @@
 <body>
 <div class="container">
 
+<!-- Navigation -->
 <nav class="main-nav">
   <a href="index.html">Home</a>
   <a href="live.html">Live Tracker</a>
@@ -20,17 +21,44 @@
 </nav>
 
 <h1>Live Coin Tracker</h1>
-<p>Check the live prices of all cryptocurrencies in real-time.</p>
+<p>Check the live prices of top cryptocurrencies in real-time.</p>
 
 <div class="box row">
-<input type="text" id="searchCoinLive" data-live-input="true" data-output="coinPriceLive" placeholder="Search coin (BTC, ETH...)">
-<button onclick="checkPrice('searchCoinLive','coinPriceLive')">Check Price</button>
+  <input type="text" id="searchCoinLive" data-live-input="true" data-output="coinPriceLive" placeholder="Search coin (BTC, ETH...)">
+  <button onclick="checkPrice('searchCoinLive','coinPriceLive')">Check Price</button>
 </div>
 
 <p id="coinPriceLive" style="font-size:1.2rem;margin-top:10px;"></p>
 
+<!-- Ads Block -->
+<div class="ads-block">
+  <ins class="adsbygoogle"
+       style="display:block;height:90px"
+       data-ad-client="ca-pub-XXXXXXXX"
+       data-ad-slot="XXXXXXXX"></ins>
+</div>
+
+<!-- Live Table -->
+<table id="liveTable">
+  <tr>
+    <th>Rank</th>
+    <th>Coin</th>
+    <th>Price (USD)</th>
+    <th>24h Change</th>
+    <th>7d Chart</th>
+  </tr>
+</table>
+
 </div>
 
 <script src="script.js"></script>
+<script>
+  const waitLive = setInterval(() => {
+    if(allCoins.length){
+      renderLiveTable('liveTable', 20);
+      clearInterval(waitLive);
+    }
+  }, 300);
+</script>
 </body>
 </html>
